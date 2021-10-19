@@ -5,12 +5,12 @@ theme: forty
 googleAnalytics: ''
 disqusShortname: ''
 params:
-  banner:
+  banner: 
     buttonText: Get Started
     subtitle: |-
-      # A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
-      AND RELEASED UNDER THE CREATIVE COMMONS.
-    title: Hi, my name is Clara
+      Nice to meet you! 
+      
+    title: Hi, Welcome to Clara's website
   blog: {}
   contact:
     address:
@@ -77,14 +77,14 @@ params:
      #   url: elements.html
     menu: Menu
     subtitle: By HTML5 Up
-    title: Forty
+    title: Back
   tiles:
     enable: yes
     showcase:
-      - image: pic01.jpg
-        subtitle: Ipsum Dolor Sit Amet
-        title: Aliquam
-        url: blogs/aliquam
+      - image: lbs.jpg
+        subtitle: Data Analytics for Finance Case
+        title: Risk Return
+        url: blogs/risk_return
       - image: pic02.jpg
         subtitle: Feugiat Amet Tempus
         title: Tempus
