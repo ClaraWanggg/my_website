@@ -76,26 +76,26 @@ params:
      # - name: Elements
      #   url: elements.html
     menu: Menu
-    subtitle: By HTML5 Up
+    subtitle: Website
     title: Back
   tiles:
     enable: yes
     showcase:
       - image: lbs.jpg
         subtitle: Data Analytics for Finance Case
-        title: Risk Return
-        url: blogs/risk_return
-      - image: pic02.jpg
-        subtitle: Feugiat Amet Tempus
-        title: Tempus
+        title: Homework Case
+        url: blogs/hw.Rmd
+      - image: me.jpg
+        subtitle: THIS IS CLARA
+        title: ABOUT ME
         url: blogs/tempus
       - image: pic03.jpg
         subtitle: Lorem Etiam Nullam
         title: Magna
         url: blogs/magna
-      - image: pic04.jpg
-        subtitle: Nisl Sed Aliquam
-        title: Ipsum
+      - image: food.jpg
+        subtitle: ENJOY FOOD
+        title: About Food
         url: blogs/ipsum
       - image: pic05.jpg
         subtitle: Ipsum Dolor Sit Amet
