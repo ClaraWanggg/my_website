@@ -5,8 +5,10 @@ categories:
 date: "2017-10-31T22:26:09-05:00"
 description: Lorem Etiam Nullam
 draft: false
-image: pic09.jpg
+image: photo.jpg
 keywords: ""
 slug: magna
-title: Magna
+title: Life in LBS
 ---
+
+I really enjoy the collaborative culture in LBS. Welcome to reach out if you want to know more about my experience in LBS!

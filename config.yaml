@@ -81,38 +81,37 @@ params:
   tiles:
     enable: yes
     showcase:
-      - image: lbs.jpg
-        subtitle: Data Analytics for Finance Case
-        title: Homework Case
-        url: blogs/hw.Rmd
       - image: me.jpg
         subtitle: THIS IS CLARA
-        title: ABOUT ME
+        title: About Me
         url: blogs/tempus
+      - image: hongkong.jpg
+        subtitle: ENJOY HONG KONG
+        title: About Hong Kong
+        url: blogs/hongkong        
       - image: pic03.jpg
-        subtitle: Lorem Etiam Nullam
-        title: Magna
+        subtitle: Data Analytics for Finance Case
+        title: Risk-Return of DJIA stocks
+        url: blogs/risk_return
+      - image: lbs.jpg
+        subtitle: ENJOY LBS
+        title: About LBS
         url: blogs/magna
       - image: food.jpg
         subtitle: ENJOY FOOD
         title: About Food
         url: blogs/ipsum
-      - image: pic05.jpg
-        subtitle: Ipsum Dolor Sit Amet
-        title: Consequat
-        url: blogs/ipsum
-      - image: pic06.jpg
-        subtitle: Feugiat Amet Tempus
-        title: Etiam
-        url: blogs/ipsum
+      - image: london.jpg
+        subtitle: ENJOY London
+        title: About London
+        url: blogs/aliquam
+
   two:
     buttonText: Get Started
     enable: yes
-    subtitle: "Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero.
-      \r\n    Mauris aliquet magna magna sed nunc rhoncus pharetra. \r\n    Pellentesque
-      condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia
-      pellentesque lorem ipsum dolor. \r\n    Nullam et orci eu lorem consequat tincidunt.
-      Vivamus et sagittis libero.\r\n    Mauris aliquet magna magna sed nunc rhoncus
-      amet pharetra et feugiat tempus."
-    title: Massa libero
+    subtitle: "
+      Love Life.\r\n
+      Love Sports.\r\n    
+      Love debating. \r\n   
+    title: Make friends with ME!
     url: blogs
