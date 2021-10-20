@@ -10,7 +10,7 @@ params:
     subtitle: |-
       Nice to meet you! 
       
-    title: Hi, Welcome to Clara's website
+    title: Hi, Welcome to Clara's world
   blog: {}
   contact:
     address:
@@ -112,6 +112,6 @@ params:
     subtitle: "
       Love Life.\r\n
       Love Sports.\r\n    
-      Love debating. \r\n   
+      Love debating. \r\n" 
     title: Make friends with ME!
     url: blogs
