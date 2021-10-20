@@ -5,109 +5,172 @@ categories:
 date: "2021-09-30"
 description: Risk-Return of DJIA stocks # the title that will show up once someone gets to this page
 draft: false
-image: spices.jpg # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
+image: beef.jpg # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
 
 keywords: ""
 slug: risk_return # slug is the shorthand URL address... no spaces plz
-title: Risk-Return of DJIA stocks
+title: Climate change and temperature anomalies
 ---
 
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
-<div id="returns-of-financial-stocks" class="section level1">
-<h1>Returns of financial stocks</h1>
-<p>Next, let’s choose the <a href="https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average">Dow Jones Industrial Average (DJIA)</a> stocks and their ticker symbols and download some data. Besides the thirty stocks that make up the DJIA, we will also add <code>SPY</code> which is an SP500 ETF (Exchange Traded Fund).</p>
-<p>We will use the <code>rvest</code> package to scrape the Wikipedia page for the constituents of DJIA</p>
-<pre class="r"><code>djia_url &lt;- &quot;https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average&quot;
+<div id="climate-change-and-temperature-anomalies" class="section level1">
+<h1>Climate change and temperature anomalies</h1>
+<p>If we wanted to study climate change, we can find data on the <em>Combined Land-Surface Air and Sea-Surface Water Temperature Anomalies</em> in the Northern Hemisphere at <a href="https://data.giss.nasa.gov/gistemp">NASA’s Goddard Institute for Space Studies</a>. The <a href="https://data.giss.nasa.gov/gistemp/tabledata_v4/NH.Ts+dSST.txt">tabular data of temperature anomalies can be found here</a></p>
+<p>To define temperature anomalies you need to have a reference, or base, period which NASA clearly states that it is the period between 1951-1980.</p>
+<p>Run the code below to load the file:</p>
+<pre class="r"><code>weather &lt;- 
+  read_csv(&quot;https://data.giss.nasa.gov/gistemp/tabledata_v4/NH.Ts+dSST.csv&quot;, 
+           skip = 1, 
+           na = &quot;***&quot;)</code></pre>
+<p>Notice that, when using this function, we added two options: <code>skip</code> and <code>na</code>.</p>
+<ol style="list-style-type: decimal">
+<li>The <code>skip=1</code> option is there as the real data table only starts in Row 2, so we need to skip one row.</li>
+<li><code>na = "***"</code> option informs R how missing observations in the spreadsheet are coded. When looking at the spreadsheet, you can see that missing data is coded as "***". It is best to specify this here, as otherwise some of the data is not recognized as numeric data.</li>
+</ol>
+<p>Once the data is loaded, notice that there is a object titled <code>weather</code> in the <code>Environment</code> panel. If you cannot see the panel (usually on the top-right), go to <code>Tools</code> &gt; <code>Global Options</code> &gt; <code>Pane Layout</code> and tick the checkbox next to <code>Environment</code>. Click on the <code>weather</code> object, and the dataframe will pop up on a seperate tab. Inspect the dataframe.</p>
+<p>For each month and year, the dataframe shows the deviation of temperature from the normal (expected). Further the dataframe is in wide format.</p>
+<p>You have two objectives in this section:</p>
+<ol style="list-style-type: decimal">
+<li><p>Select the year and the twelve month variables from the <code>weather</code> dataset. We do not need the others (J-D, D-N, DJF, etc.) for this assignment. Hint: use <code>select()</code> function.</p></li>
+<li><p>Convert the dataframe from wide to ‘long’ format. Hint: use <code>gather()</code> or <code>pivot_longer()</code> function. Name the new dataframe as <code>tidyweather</code>, name the variable containing the name of the month as <code>month</code>, and the temperature deviation values as <code>delta</code>.</p></li>
+</ol>
+<pre class="r"><code>tidyweather &lt;- weather %&gt;% 
+  select(Year, Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec) %&gt;% 
+  pivot_longer(cols = 2:13, #columns 3 to 5
+               names_to = &quot;Month&quot;,
+               values_to = &quot;delta&quot;)</code></pre>
+<p>Inspect your dataframe. It should have three variables now, one each for</p>
+<ol style="list-style-type: decimal">
+<li>year,</li>
+<li>month, and</li>
+<li>delta, or temperature deviation.</li>
+</ol>
+<div id="plotting-information" class="section level2">
+<h2>Plotting Information</h2>
+<p>Let us plot the data using a time-series scatter plot, and add a trendline. To do that, we first need to create a new variable called <code>date</code> in order to ensure that the <code>delta</code> values are plot chronologically.</p>
+<blockquote>
+<p>In the following chunk of code, I used the <code>eval=FALSE</code> argument, which does not run a chunk of code; I did so that you can knit the document before tidying the data and creating a new dataframe <code>tidyweather</code>. When you actually want to run this code and knit your document, you must delete <code>eval=FALSE</code>, <strong>not just here but in all chunks were <code>eval=FALSE</code> appears.</strong></p>
+</blockquote>
+<pre class="r"><code>tidyweather &lt;- tidyweather %&gt;%
+  mutate(date = ymd(paste(as.character(Year), Month, &quot;1&quot;)),
+         month = month(date, label=TRUE),
+         year = year(date))
 
+ggplot(tidyweather, aes(x=date, y = delta))+
+  geom_point()+
+  geom_smooth(color=&quot;red&quot;) +
+  theme_bw() +
+  labs (
+    title = &quot;Weather Anomalies&quot;
+  )</code></pre>
+<p><img src="/blogs/risk_return_files/figure-html/scatter_plot-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>Is the effect of increasing temperature more pronounced in some months? Use <code>facet_wrap()</code> to produce a seperate scatter plot for each month, again with a smoothing line. Your chart should human-readable labels; that is, each month should be labeled “Jan”, “Feb”, “Mar” (full or abbreviated month names are fine), not <code>1</code>, <code>2</code>, <code>3</code>.</p>
+<pre class="r"><code>#Your code goes here...
+ggplot(tidyweather, aes(x=date, y = delta))+
+  geom_point()+
+  geom_smooth(color=&quot;red&quot;) +
+  theme_bw() +
+  labs (
+    title = &quot;Weather Anomalies&quot;
+  ) +
+  facet_wrap(~factor(month, levels = unique(month)))</code></pre>
+<p><img src="/blogs/risk_return_files/figure-html/facet_wrap-1.png" width="648" style="display: block; margin: auto;" />
+&gt;The above-depicted scatter plots clearly depict that the effect of increasing temperature is more pronounced in Q1 and Q4, particularly November, December, February and March. This can potentially be linked to climate change associated extreme weather conditions leading to heatwaves and relatively higher tempurates around the world.</p>
+<p>It is sometimes useful to group data into different time periods to study historical data. For example, we often refer to decades such as 1970s, 1980s, 1990s etc. to refer to a period of time. NASA calcuialtes a temperature anomaly, as difference form the base periof of 1951-1980. The code below creates a new data frame called <code>comparison</code> that groups data in five time periods: 1881-1920, 1921-1950, 1951-1980, 1981-2010 and 2011-present.</p>
+<p>We remove data before 1800 and before using <code>filter</code>. Then, we use the <code>mutate</code> function to create a new variable <code>interval</code> which contains information on which period each observation belongs to. We can assign the different periods using <code>case_when()</code>.</p>
+<pre class="r"><code>comparison &lt;- tidyweather %&gt;% 
+  filter(Year&gt;= 1881) %&gt;%     #remove years prior to 1881
+  #create new variable &#39;interval&#39;, and assign values based on criteria below:
+  mutate(interval = case_when(
+    Year %in% c(1881:1920) ~ &quot;1881-1920&quot;,
+    Year %in% c(1921:1950) ~ &quot;1921-1950&quot;,
+    Year %in% c(1951:1980) ~ &quot;1951-1980&quot;,
+    Year %in% c(1981:2010) ~ &quot;1981-2010&quot;,
+    TRUE ~ &quot;2011-present&quot;
+  ))</code></pre>
+<p>Inspect the <code>comparison</code> dataframe by clicking on it in the <code>Environment</code> pane.</p>
+<p>Now that we have the <code>interval</code> variable, we can create a density plot to study the distribution of monthly deviations (<code>delta</code>), grouped by the different time periods we are interested in. Set <code>fill</code> to <code>interval</code> to group and colour the data by different time periods.</p>
+<pre class="r"><code>ggplot(comparison, aes(x=delta, fill=interval))+
+  geom_density(alpha=0.2) +   #density plot with tranparency set to 20%
+  theme_bw() +                #theme
+  labs (
+    title = &quot;Density Plot for Monthly Temperature Anomalies&quot;,
+    y     = &quot;Density&quot;         #changing y-axis label to sentence case
+  )</code></pre>
+<p>So far, we have been working with monthly anomalies. However, we might be interested in average annual anomalies. We can do this by using <code>group_by()</code> and <code>summarise()</code>, followed by a scatter plot to display the result.</p>
+<pre class="r"><code>#creating yearly averages
+average_annual_anomaly &lt;- tidyweather %&gt;% 
+  group_by(Year) %&gt;%   #grouping data by Year
+  
+  # creating summaries for mean delta 
+  # use `na.rm=TRUE` to eliminate NA (not available) values 
+  summarise(annual_average_delta = mean(delta, na.rm=TRUE)) 
 
-#get tables that exist on URL
-tables &lt;- djia_url %&gt;% 
-  read_html() %&gt;% 
-  html_nodes(css=&quot;table&quot;)
+#plotting the data:
+ggplot(average_annual_anomaly, aes(x=Year, y= annual_average_delta))+
+  geom_point()+
+  
+  #Fit the best fit line, using LOESS method
+ geom_smooth(method = &#39;loess&#39;) +
+  
+  #change to theme_bw() to have white background + black frame around plot
+  theme_bw() +
+  labs (
+    title = &quot;Average Yearly Anomaly&quot;,
+    y     = &quot;Average Annual Delta&quot;
+  )                         </code></pre>
+</div>
+<div id="confidence-interval-for-delta" class="section level2">
+<h2>Confidence Interval for <code>delta</code></h2>
+<p><a href="https://earthobservatory.nasa.gov/world-of-change/decadaltemp.php">NASA points out on their website</a> that</p>
+<blockquote>
+<p>A one-degree global change is significant because it takes a vast amount of heat to warm all the oceans, atmosphere, and land by that much. In the past, a one- to two-degree drop was all it took to plunge the Earth into the Little Ice Age.</p>
+</blockquote>
+<p>Your task is to construct a confidence interval for the average annual delta since 2011, both using a formula and using a bootstrap simulation with the <code>infer</code> package. Recall that the dataframe <code>comparison</code> has already grouped temperature anomalies according to time intervals; we are only interested in what is happening between 2011-present.</p>
+<pre class="r"><code>formula_ci &lt;- comparison %&gt;% 
 
+  # choose the interval 2011-present
+  # what dplyr verb will you use? 
+  filter(interval == &quot;2011-present&quot;) %&gt;% 
+  
+  
+  
+  # calculate summary statistics for temperature deviation (delta) 
+  # calculate mean, SD, count, SE, lower/upper 95% CI
+  # what dplyr verb will you use? 
+  summarise(mean_variation = mean(delta, na.rm=TRUE),
+            sd_variation = sd(delta, na.rm=TRUE),
+            count_variation = n(),
+            se_variation = sd_variation / sqrt(count_variation),
+            t_critical = qt(0.975, count_variation - 1),
+            lower_95p_variation = mean_variation - t_critical * se_variation,
+            upper_95p_variation = mean_variation + t_critical * se_variation
+            )
 
-# parse HTML tables into a dataframe called djia. 
-# Use purr::map() to create a list of all tables in URL
-djia &lt;- map(tables, . %&gt;% 
-               html_table(fill=TRUE)%&gt;% 
-               clean_names())
+#print out formula_CI
+formula_ci</code></pre>
+<pre class="r"><code># use the infer package to construct a 95% CI for delta
 
+boot_delta &lt;- comparison %&gt;% 
+  filter(interval == &quot;2011-present&quot;) %&gt;% 
+  specify(response = delta) %&gt;% 
+  generate(reps=1000, type=&quot;bootstrap&quot;) %&gt;% 
+  calculate(stat=&quot;mean&quot;)
 
-# constituents
-table1 &lt;- djia[[2]] %&gt;% # the second table on the page contains the ticker symbols
-  mutate(date_added = ymd(date_added),
-         
-         # if a stock is listed on NYSE, its symbol is, e.g., NYSE: MMM
-         # We will get prices from yahoo finance which requires just the ticker
-         
-         # if symbol contains &quot;NYSE*&quot;, the * being a wildcard
-         # then we jsut drop the first 6 characters in that string
-         ticker = ifelse(str_detect(symbol, &quot;NYSE*&quot;),
-                          str_sub(symbol,7,11),
-                          symbol)
-         )
+percentile_ci &lt;- boot_delta %&gt;% 
+  get_confidence_interval(level = 0.95, type=&quot;percentile&quot;)
 
-# we need a vector of strings with just the 30 tickers + SPY  + VIX
-tickers &lt;- table1 %&gt;% 
-  select(ticker) %&gt;% 
-  pull() %&gt;% # pull() gets them as a sting of characters
-  c(&quot;SPY&quot;, &quot;^VIX&quot;) # and lets us add SPY, the SP500 ETF, and the VIX index</code></pre>
-<pre class="r"><code># Notice the cache=TRUE argument in the chunk options. Because getting data is time consuming, # cache=TRUE means that once it downloads data, the chunk will not run again next time you knit your Rmd
+percentile_ci
 
-myStocks &lt;- tickers %&gt;% 
-  tq_get(get  = &quot;stock.prices&quot;,
-         from = &quot;2000-01-01&quot;) %&gt;%
-  group_by(symbol) 
-
-glimpse(myStocks) # examine the structure of the resulting data frame</code></pre>
-<pre><code>## Rows: 167,503
-## Columns: 8
-## Groups: symbol [32]
-## $ symbol   &lt;chr&gt; &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;~
-## $ date     &lt;date&gt; 2000-01-03, 2000-01-04, 2000-01-05, 2000-01-06, 2000-01-07, ~
-## $ open     &lt;dbl&gt; 48.0, 46.4, 45.6, 47.2, 50.6, 50.2, 50.4, 51.0, 50.7, 50.4, 4~
-## $ high     &lt;dbl&gt; 48.2, 47.4, 48.1, 51.2, 51.9, 51.8, 51.2, 51.8, 50.9, 50.5, 4~
-## $ low      &lt;dbl&gt; 47.0, 45.3, 45.6, 47.2, 50.0, 50.0, 50.2, 50.4, 50.2, 49.5, 4~
-## $ close    &lt;dbl&gt; 47.2, 45.3, 46.6, 50.4, 51.4, 51.1, 50.2, 50.4, 50.4, 49.7, 4~
-## $ volume   &lt;dbl&gt; 2173400, 2713800, 3699400, 5975800, 4101200, 3863800, 2357600~
-## $ adjusted &lt;dbl&gt; 27.2, 26.1, 26.9, 29.0, 29.6, 29.4, 28.9, 29.0, 29.0, 28.6, 2~</code></pre>
-<p>Financial performance analysis depend on returns; If I buy a stock today for 100 and I sell it tomorrow for 101.75, my one-day return, assuming no transaction costs, is 1.75%. So given the adjusted closing prices, our first step is to calculate daily and monthly returns.</p>
-<pre class="r"><code>#calculate daily returns
-myStocks_returns_daily &lt;- myStocks %&gt;%
-  tq_transmute(select     = adjusted, 
-               mutate_fun = periodReturn, 
-               period     = &quot;daily&quot;, 
-               type       = &quot;log&quot;,
-               col_rename = &quot;daily_returns&quot;,
-               cols = c(nested.col))  
-
-#calculate monthly  returns
-myStocks_returns_monthly &lt;- myStocks %&gt;%
-  tq_transmute(select     = adjusted, 
-               mutate_fun = periodReturn, 
-               period     = &quot;monthly&quot;, 
-               type       = &quot;arithmetic&quot;,
-               col_rename = &quot;monthly_returns&quot;,
-               cols = c(nested.col)) </code></pre>
-<pre class="r"><code>#visualise monthly returns since 2010, for each of the 30 DJIA stocks
-myStocks_returns_monthly %&gt;% 
-  filter(symbol != &quot;^VIX&quot;, symbol != &quot;SPY&quot;) %&gt;% 
-  filter(date &gt;= &quot;2010-01-01&quot;) %&gt;% 
-  ggplot(aes(x = monthly_returns)) +
-  geom_density(aes(colour = symbol), alpha = 1) +
-  geom_histogram(aes(fill = symbol), alpha = 0.4, binwidth = 0.005)+
-  facet_wrap(~symbol, nrow=7)+
-  theme_bw(8)+
-  theme(legend.position = &quot;none&quot;) +
-  scale_x_continuous(labels = scales::percent) +
-  labs(
-    title = &quot;Distribution of monthly returns for DJIA stocks&quot;,
-    subtitle = &quot;Jan 2010 - now&quot;,
-    x = &quot;Monthly returns (%)&quot;,
-    y = &quot;&quot; )+
-  NULL</code></pre>
-<p><img src="/blogs/risk_return_files/figure-html/unnamed-chunk-1-1.png" width="648" style="display: block; margin: auto;" /></p>
-<p><img src="/blogs/risk_return_files/figure-html/risk_return-1.png" width="648" style="display: block; margin: auto;" /></p>
+formula_ci %&gt;% select(lower_95p_variation, upper_95p_variation)</code></pre>
+<blockquote>
+<p>What is the data showing us? Please type your answer after (and outside!) this blockquote. You have to explain what you have done, and the interpretation of the result. One paragraph max, please!</p>
+</blockquote>
+<blockquote>
+<p>The results is the same up to at least two decimal points. Using the formula (first part), we came to a lower 95% confidence interval of 1.01 and an upper boundary of 1.11, which means that we are 95% confident that additional results would be inside that range (i.e. temperature deviation would be in this range).
+Using the bootstrapping method, we simulate 1000 datasets from our sample to get a new distribution that helps us to set these upper and lower boundaries.</p>
+</blockquote>
+</div>
 </div>

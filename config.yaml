@@ -89,9 +89,9 @@ params:
         subtitle: ENJOY HONG KONG
         title: About Hong Kong
         url: blogs/hongkong        
-      - image: pic03.jpg
-        subtitle: Data Analytics for Finance Case
-        title: Risk-Return of DJIA stocks
+      - image: field.jpg
+        subtitle: Climate change and temperature anomalies
+        title: Data Analytics for Finance Case
         url: blogs/risk_return
       - image: lbs.jpg
         subtitle: ENJOY LBS
@@ -112,6 +112,7 @@ params:
     subtitle: "
       Love Life.\r\n
       Love Sports.\r\n    
-      Love debating. \r\n" 
+      Love Travelling. \r\n
+      Love Reading.\r\n" 
     title: Make friends with ME!
     url: blogs
